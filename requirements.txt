@@ -1,0 +1,6 @@
+matplotlib>=3.8
+pytest>=8.0
+black>=24.0
+ruff>=0.4
+rich>=13.0
+jupyter>=1.0
