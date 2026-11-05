@@ -1,7 +1,5 @@
 # Projet Python ING3 — Pipeline de logs sécurisé
 
-Cahier des charges complet : <https://claude.ai/artifact/3GGagPyhmAEAPoKskDrcY4>
-
 ## Installation
 
 ```powershell
