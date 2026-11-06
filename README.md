@@ -32,6 +32,15 @@ python main.py --input data/sample_small.log --limit 10
 pytest -v
 ```
 
+## Mémoire (preuve non-saturation RAM)
+
+```powershell
+python scripts/bench_memory.py --input data/sample_large.log
+```
+
+Mesures et méthodologie détaillées dans [BENCH.md](BENCH.md).
+Résumé : **46 400×** de ratio taille fichier / RAM pic sur 2,75 Go.
+
 ## Équipe
 
 - **Dev A — Mniangadou** : Module 1 (ingestion & générateurs) + script de génération
