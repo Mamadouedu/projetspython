@@ -215,6 +215,11 @@ def dirty_line(ts: datetime) -> str:
 def generate(path: Path, target_bytes: int) -> dict[str, int]:
     """Génère un fichier de logs jusqu'à atteindre `target_bytes`.
 
+    Optimisé pour le débit :
+    - Buffer disque de 4 Mo (au lieu des 8 Ko par défaut).
+    - Buffer Python de 10 000 lignes écrites en un seul `writelines`.
+    - Compte d'octets via `len(line)+1` (ASCII ≈ UTF-8 pour nos lignes).
+
     Retourne un dict de statistiques (nb lignes totales, nb lignes sales,
     nb rafales brute-force) à titre informatif.
     """
@@ -224,7 +229,10 @@ def generate(path: Path, target_bytes: int) -> dict[str, int]:
     written = 0
     i = 0
 
-    with path.open("w", encoding="utf-8") as f:
+    buffer: list[str] = []
+    BUFFER_SIZE = 10_000
+
+    with path.open("w", encoding="utf-8", buffering=4 * 1024 * 1024) as f:
         while written < target_bytes:
             # Timestamp pseudo-réparti (de 0.3s à 1.2s entre logs).
             ts = START_TIME + timedelta(seconds=i * random.uniform(0.3, 1.2))
@@ -232,24 +240,32 @@ def generate(path: Path, target_bytes: int) -> dict[str, int]:
             # Rafale brute-force périodique.
             if i > 0 and i % BRUTEFORCE_BURST_EVERY == 0:
                 for line in bruteforce_burst(ts):
-                    f.write(line + "\n")
-                    written += len(line.encode("utf-8")) + 1
+                    buffer.append(line + "\n")
+                    written += len(line) + 1
                     stats["total"] += 1
                 stats["bursts"] += 1
                 i += 1
-                continue
-
-            # Ligne sale ou propre.
-            if random.random() < DIRTY_RATIO:
-                line = dirty_line(ts)
-                stats["dirty"] += 1
             else:
-                line = clean_line(ts)
+                # Ligne sale ou propre.
+                if random.random() < DIRTY_RATIO:
+                    line = dirty_line(ts)
+                    stats["dirty"] += 1
+                else:
+                    line = clean_line(ts)
 
-            f.write(line + "\n")
-            written += len(line.encode("utf-8")) + 1
-            stats["total"] += 1
-            i += 1
+                buffer.append(line + "\n")
+                written += len(line) + 1
+                stats["total"] += 1
+                i += 1
+
+            # Flush périodique du buffer Python.
+            if len(buffer) >= BUFFER_SIZE:
+                f.writelines(buffer)
+                buffer.clear()
+
+        # Flush final.
+        if buffer:
+            f.writelines(buffer)
 
     return stats
 
