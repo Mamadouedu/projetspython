@@ -29,8 +29,13 @@ from src.ingestion.log_generator import read_log_file  # noqa: E402
 from src.ingestion.parser import parse_line  # noqa: E402
 
 
-def bench(path: Path) -> dict[str, float | int]:
-    """Lit et parse l'intégralité du fichier, mesure RAM et temps."""
+def bench(path: Path, read_only: bool = False) -> dict[str, float | int]:
+    """Lit (et parse si demandé) l'intégralité du fichier, mesure RAM et temps.
+
+    `read_only=True` saute l'étape parsing — mesure la seule lecture via
+    `yield` + `yield from`. Utile pour prouver la non-saturation RAM à
+    grande échelle en quelques minutes seulement.
+    """
     if not path.exists():
         raise FileNotFoundError(f"Fichier introuvable : {path}")
 
@@ -41,12 +46,14 @@ def bench(path: Path) -> dict[str, float | int]:
 
     total = kept = dropped = 0
     for raw in read_log_file(path):
+        total += 1
+        if read_only:
+            continue
         entry = parse_line(raw)
         if entry is None:
             dropped += 1
         else:
             kept += 1
-        total += 1
 
     elapsed = time.perf_counter() - t0
     current, peak = tracemalloc.get_traced_memory()
@@ -63,6 +70,7 @@ def bench(path: Path) -> dict[str, float | int]:
         "mem_peak_mb": peak / 1024**2,
         "throughput_mb_s": (file_size / 1024**2) / elapsed if elapsed > 0 else 0.0,
         "throughput_lines_s": total / elapsed if elapsed > 0 else 0.0,
+        "mode": "read-only" if read_only else "read+parse",
     }
 
 
@@ -71,16 +79,17 @@ def _fmt_int(n: int) -> str:
 
 
 def print_report(path: Path, stats: dict[str, float | int]) -> None:
-    pct_dropped = 100 * stats["dropped"] / max(stats["total_lines"], 1)
     print(f"\n{'=' * 60}")
-    print(f"  BENCH MÉMOIRE — {path}")
+    print(f"  BENCH MÉMOIRE — {path}  [{stats['mode']}]")
     print(f"{'=' * 60}")
     print(f"  Fichier          : {stats['file_size_gb']:.3f} Go "
           f"({stats['file_size_mb']:.1f} Mo)")
     print(f"  Lignes totales   : {_fmt_int(int(stats['total_lines']))}")
-    print(f"  Valides          : {_fmt_int(int(stats['kept']))}")
-    print(f"  Rejetées (sales) : {_fmt_int(int(stats['dropped']))} "
-          f"({pct_dropped:.1f} %)")
+    if stats["mode"] == "read+parse":
+        pct_dropped = 100 * stats["dropped"] / max(stats["total_lines"], 1)
+        print(f"  Valides          : {_fmt_int(int(stats['kept']))}")
+        print(f"  Rejetées (sales) : {_fmt_int(int(stats['dropped']))} "
+              f"({pct_dropped:.1f} %)")
     print(f"  Temps            : {stats['elapsed_s']:.2f} s")
     print(f"  Débit            : {stats['throughput_mb_s']:.1f} Mo/s "
           f"— {_fmt_int(int(stats['throughput_lines_s']))} lignes/s")
@@ -111,9 +120,14 @@ def main() -> None:
         required=True,
         help="Fichier de logs à parcourir.",
     )
+    parser.add_argument(
+        "--read-only",
+        action="store_true",
+        help="Mesure uniquement la lecture (yield), sans parser — très rapide.",
+    )
     args = parser.parse_args()
 
-    stats = bench(args.input)
+    stats = bench(args.input, read_only=args.read_only)
     print_report(args.input, stats)
 
 
