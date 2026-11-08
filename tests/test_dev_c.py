@@ -21,11 +21,12 @@ def test_unique_error_ips():
 
 
 def test_ip_set_analysis():
-    active_ips = {"10.0.0.1", "192.168.1.10"}
+    # 192.168.1.10 est dans BLACKLIST (IPs 1..12 du générateur), 10.0.0.99 non.
+    active_ips = {"10.0.0.99", "192.168.1.10"}
     result = ip_set_analysis(active_ips)
-    assert result["blacklisted_active"] == {"10.0.0.1"}
+    assert result["blacklisted_active"] == {"192.168.1.10"}
     assert result["all_known"] == active_ips | BLACKLIST
-    assert result["clean_active"] == {"192.168.1.10"}
+    assert result["clean_active"] == {"10.0.0.99"}
     assert result["exclusives"] == active_ips ^ BLACKLIST
 
 
