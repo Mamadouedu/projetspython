@@ -4,8 +4,15 @@ from collections.abc import Iterable, Mapping
 from typing import Any
 
 
-# Ensemble immuable des adresses IP interdites fourni par le cahier des charges.
-BLACKLIST: frozenset[str] = frozenset({"10.0.0.1", "192.168.1.66"})
+# Ensemble immuable des adresses IP interdites.
+# Doit correspondre aux 12 premières IPs produites par scripts/generate_logs.py
+# (variable BLACKLIST_IPS = IPS[:12] du générateur), sinon ip_set_analysis
+# renvoie un `blacklisted_active` vide sur le vrai dataset.
+BLACKLIST: frozenset[str] = frozenset({
+    "192.168.1.1", "192.168.1.2", "192.168.1.3", "192.168.1.4",
+    "192.168.1.5", "192.168.1.6", "192.168.1.7", "192.168.1.8",
+    "192.168.1.9", "192.168.1.10", "192.168.1.11", "192.168.1.12",
+})
 
 
 def unique_error_ips(logs: Iterable[Mapping[str, Any]]) -> set[str]:
