@@ -27,3 +27,6 @@ Thumbs.db
 
 # Env
 .env
+
+# PDFs de cahiers des charges locaux (références Claude, pas des livrables)
+*.pdf
