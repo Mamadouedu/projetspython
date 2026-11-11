@@ -9,10 +9,11 @@ charger l'intégralité en RAM.
   à `read_log_file` via `yield from`, pour chaîner plusieurs fichiers
   successifs en un seul flux unique.
 """
+
 from __future__ import annotations
 
+from collections.abc import Iterator, Sequence
 from pathlib import Path
-from typing import Iterator, Sequence
 
 
 def read_log_file(path: str | Path) -> Iterator[str]:

@@ -1,7 +1,7 @@
 """Tests unitaires du Module 1 (ingestion & parsing)."""
+
 from __future__ import annotations
 
-import tempfile
 import types
 from pathlib import Path
 
@@ -9,17 +9,13 @@ from src.ingestion.log_generator import read_log_file, read_multiple_sources
 from src.ingestion.parser import parse_line
 
 CLEAN_JSON = (
-    '2026-11-01T10:00:00Z | INFO | 192.168.1.42 | user=admin '
+    "2026-11-01T10:00:00Z | INFO | 192.168.1.42 | user=admin "
     '| {"action": "login", "status": "ok"}'
 )
 CLEAN_TUPLE = (
-    "2026-11-01T10:00:01Z | ERROR | 10.0.0.5 | user=bob "
-    "| (192.168.1.1, 8080, HTTPS)"
+    "2026-11-01T10:00:01Z | ERROR | 10.0.0.5 | user=bob " "| (192.168.1.1, 8080, HTTPS)"
 )
-CLEAN_RAW = (
-    "2026-11-01T10:00:02Z | WARNING | 10.0.0.6 | user=carol "
-    "| raw event 1234"
-)
+CLEAN_RAW = "2026-11-01T10:00:02Z | WARNING | 10.0.0.6 | user=carol " "| raw event 1234"
 
 
 # --- Cas propres -----------------------------------------------------------
@@ -101,7 +97,7 @@ def test_tolerates_leading_trailing_whitespace() -> None:
 def test_accepts_timestamp_with_microseconds() -> None:
     line = (
         "2026-11-01T00:00:00.520403Z | INFO | 192.168.3.7 "
-        "| user=user_037 | {\"action\": \"login\"}"
+        '| user=user_037 | {"action": "login"}'
     )
     entry = parse_line(line)
     assert entry is not None

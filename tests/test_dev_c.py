@@ -3,11 +3,11 @@
 Depuis la racine du projet : python test_dev_c.py
 """
 
-from src.analytics.sets_ops import BLACKLIST, unique_error_ips, ip_set_analysis
-from src.analytics.counters import count_by_category
 from src.analytics.bruteforce import detect_bruteforce
-from src.engine.rule_engine import apply_security_rules
+from src.analytics.counters import count_by_category
+from src.analytics.sets_ops import BLACKLIST, ip_set_analysis, unique_error_ips
 from src.engine.audit import audit_runtime_state
+from src.engine.rule_engine import apply_security_rules
 
 
 def test_unique_error_ips():

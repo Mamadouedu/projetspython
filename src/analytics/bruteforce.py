@@ -5,7 +5,6 @@ from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from typing import Any
 
-
 FAILED_STATUSES = frozenset({"failed", "failure"})
 
 
@@ -65,30 +64,22 @@ def detect_bruteforce(
             # Aucun champ action/status : ce log ne décrit pas un événement utile.
             continue
 
-        action = str(
-            event_data.get("action", log.get("action", ""))
-        ).strip().lower()
-        status = str(
-            event_data.get("status", log.get("status", ""))
-        ).strip().lower()
+        action = str(event_data.get("action", log.get("action", ""))).strip().lower()
+        status = str(event_data.get("status", log.get("status", ""))).strip().lower()
 
         if action != "login":
             continue
 
         if status in FAILED_STATUSES:
             failures_by_ip[src_ip] += 1
-            if (
-                failures_by_ip[src_ip] >= threshold
-                and src_ip not in detected_set
-            ):
+            if failures_by_ip[src_ip] >= threshold and src_ip not in detected_set:
                 detected_ips.append(src_ip)
                 detected_set.add(src_ip)
         else:
             # Une tentative de login non échouée interrompt la série d'échecs.
             failures_by_ip[src_ip] = 0
 
-    else:
-        return detected_ips
+    return detected_ips
 
     # Cette instruction est une sécurité de repli ; le while se termine
     # normalement par son else dans le fonctionnement attendu.

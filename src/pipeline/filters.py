@@ -3,6 +3,7 @@
 Chaque fonction reçoit un flux de logs et renvoie un flux filtré.
 Rien n'est calculé tant qu'on ne parcourt pas le résultat (filtrage paresseux).
 """
+
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
@@ -38,10 +39,8 @@ def is_valid_request(log: LogEntry) -> bool:
     if not payload:  # {} , "" , None
         return False
 
-    if isinstance(payload, str) and payload.startswith(("{", "[")):
-        return False  # JSON cassé (objet ou liste) resté en texte
-
-    return True
+    # Un texte qui commence par "{" ou "[" est un JSON cassé resté en str.
+    return not (isinstance(payload, str) and payload.startswith(("{", "[")))
 
 
 def drop_invalid_requests(logs: Iterable[LogEntry]) -> Iterator[LogEntry]:

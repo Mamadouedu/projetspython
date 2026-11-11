@@ -14,11 +14,12 @@ Le parseur est **tolérant aux lignes sales** (consigne prof) : il renvoie
 invalide, IP invalide, niveau inconnu, user manquant), ce qui permet au
 module 2 de les filtrer facilement avec `filter(None, ...)`.
 """
+
 from __future__ import annotations
 
 import json
 import re
-from typing import Any, Optional
+from typing import Any
 
 from src.utils.types import VALID_LEVELS, LogEntry
 
@@ -56,7 +57,7 @@ def _parse_payload(raw: str) -> Any:
                 pass
 
     # JSON
-    if s.startswith("{") or s.startswith("["):
+    if s.startswith(("{", "[")):
         try:
             return json.loads(s)
         except json.JSONDecodeError:
@@ -66,7 +67,7 @@ def _parse_payload(raw: str) -> Any:
     return s
 
 
-def parse_line(line: str | None) -> Optional[LogEntry]:
+def parse_line(line: str | None) -> LogEntry | None:
     """Parse une ligne de log en LogEntry.
 
     Retourne `None` si la ligne est sale ou invalide, pour qu'elle soit

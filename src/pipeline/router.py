@@ -8,6 +8,7 @@ On regarde le format du payload de chaque log pour savoir où l'envoyer :
 
 match-case remplace une longue suite de if / elif / else.
 """
+
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator

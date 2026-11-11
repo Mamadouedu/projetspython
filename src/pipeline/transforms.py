@@ -7,6 +7,7 @@ On nettoie chaque log pour que tous aient le même format :
   "2026-11-01T10:00:00.123456Z" -> "2026-11-01T10:00:00Z"
 - espaces inutiles retirés partout
 """
+
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator

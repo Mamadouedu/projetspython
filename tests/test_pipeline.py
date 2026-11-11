@@ -1,4 +1,5 @@
 """Tests unitaires du Module 2 (pipeline fonctionnel)."""
+
 from __future__ import annotations
 
 import pytest
@@ -16,10 +17,14 @@ from src.pipeline.router import get_route, route_logs
 from src.pipeline.transforms import format_timestamp, normalize
 
 LINES = [
-    '2026-11-01T10:00:00.123456Z | INFO | 192.168.1.42 | user=Admin '
-    '| {"action": "login", "status": "ok"}',
-    '2026-11-01T10:00:01Z | ERROR | 10.0.0.5 | user=bob '
-    '| {"action": "login", "status": "failed"}',
+    (
+        "2026-11-01T10:00:00.123456Z | INFO | 192.168.1.42 | user=Admin "
+        '| {"action": "login", "status": "ok"}'
+    ),
+    (
+        "2026-11-01T10:00:01Z | ERROR | 10.0.0.5 | user=bob "
+        '| {"action": "login", "status": "failed"}'
+    ),
     "2026-11-01T10:00:02Z | WARNING | 10.0.0.6 | user=carol | raw event 1234",
     "2026-11-01T10:00:03Z | CRITICAL | 10.0.0.5 | user=bob | (192.168.1.1, 8080, HTTPS)",
     "ligne sale",
