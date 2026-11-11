@@ -72,6 +72,17 @@ rule engine, introspection) avec son entrée et sa sortie réelles sur le datase
 Utile pour la soutenance : prouve que chaque fonction produit des données, au-delà
 des 40 tests pytest qui ne font que vérifier qu'elles renvoient le bon type.
 
+## Rapport analytics (les 4 fonctions de Dev C en action)
+
+```powershell
+python scripts/analytics_report.py --input data/sample_small.log
+```
+
+Fait "parler" chaque fonction de `src/analytics` et `src/engine` sur le vrai
+dataset : `count_by_category`, `unique_error_ips`, `audit_runtime_state`,
+`apply_security_rules`. Montre entrée + sortie réelle pour chacune — utile
+quand le prof demande "et ta fonction X, elle produit quoi en pratique ?".
+
 ## Rapport IP par IP (qui fait quoi)
 
 ```powershell
