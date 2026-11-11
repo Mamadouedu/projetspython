@@ -30,3 +30,6 @@ Thumbs.db
 
 # PDFs de cahiers des charges locaux (références Claude, pas des livrables)
 *.pdf
+
+# Figures générées depuis le dataset (artefacts reproductibles)
+figures/
