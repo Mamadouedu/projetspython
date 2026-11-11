@@ -7,6 +7,7 @@ from typing import Any
 # Ensemble immuable des adresses IP interdites fourni par le cahier des charges.
 BLACKLIST: frozenset[str] = frozenset({"10.0.0.1", "192.168.1.66"})
 
+#test
 
 def unique_error_ips(logs: Iterable[Mapping[str, Any]]) -> set[str]:
     """Retourne les adresses IP distinctes ayant produit un log de niveau ERROR."""
