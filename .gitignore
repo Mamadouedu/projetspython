@@ -33,3 +33,7 @@ Thumbs.db
 
 # Figures générées depuis le dataset (artefacts reproductibles)
 figures/
+
+# Brouillons .docx du rapport (le rendu final n'est pas versionné)
+*.docx
+~$*.docx
