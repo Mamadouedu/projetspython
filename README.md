@@ -46,7 +46,7 @@ Options :
 pytest tests/ -v
 ```
 
-**40 tests** répartis en : 16 ingestion (`test_ingestion.py`) + 18 pipeline (`test_pipeline.py`) + 6 analytics/engine (`test_dev_c.py`).
+**53 tests** répartis en : 16 ingestion (`test_ingestion.py`) + 18 pipeline (`test_pipeline.py`) + 19 analytics/engine (`test_dev_c.py`).
 
 ## Mémoire (preuve non-saturation RAM)
 
