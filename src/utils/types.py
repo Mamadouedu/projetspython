@@ -8,7 +8,7 @@ Expose :
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, TypedDict
+from typing import Any, NotRequired, TypedDict
 
 
 class Severity(str, Enum):
@@ -31,6 +31,7 @@ class LogEntry(TypedDict):
     src_ip: str
     user_id: str
     payload: Any  # dict (JSON), str (brut) ou tuple (connexion)
+    summary: NotRequired[str]  # ajouté par pipeline.transforms.clean_log
 
 
 # Métadonnée fixe immuable (tuple) : (IP, Port, Protocole).

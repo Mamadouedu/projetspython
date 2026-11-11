@@ -26,8 +26,10 @@ def get_route(log: LogEntry) -> str:
         case (str(), int(), str()):
             return "connexion"
 
-        # Dictionnaire avec un niveau et un code, ex : {"level": "ERROR", "code": 500}
-        case {"level": str(), "code": _}:
+        # Dictionnaire d'erreur serveur : on CAPTURE la valeur de "code" dans la
+        # variable `code`, puis la garde `if` la teste.
+        # ex : {"level": "ERROR", "code": 500}
+        case {"level": str(), "code": int(code)} if code >= 500:
             return "dictionnaire"
 
         # N'importe quel autre dictionnaire, ex : {"action": "login", "status": "ok"}

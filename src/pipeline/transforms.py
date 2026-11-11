@@ -37,12 +37,19 @@ def clean_log(log: LogEntry) -> LogEntry:
     if isinstance(payload, str):
         payload = payload.strip()  # on nettoie seulement le texte brut
 
+    level = log["level"].strip().upper()
+    src_ip = log["src_ip"].strip()
+    user_id = log["user_id"].strip().lower()
+
     return {
         "timestamp": format_timestamp(log["timestamp"]),
-        "level": f"{log['level'].strip().upper()}",
-        "src_ip": f"{log['src_ip'].strip()}",
-        "user_id": f"{log['user_id'].strip().lower()}",
+        "level": level,
+        "src_ip": src_ip,
+        "user_id": user_id,
         "payload": payload,
+        # Résumé lisible construit avec une f-string :
+        # :<8 aligne le niveau à gauche sur 8 caractères.
+        "summary": f"[{level:<8}] {user_id} @ {src_ip}",
     }
 
 
