@@ -61,6 +61,17 @@ python scripts/bench_memory.py --input data/sample_large.log
 Mesures et méthodologie détaillées dans [BENCH.md](BENCH.md).
 Résumé : **301 106×** de ratio taille fichier / RAM pic sur 12,11 Go (42 Ko RAM).
 
+## Démo : voir chaque fonction "parler"
+
+```powershell
+python scripts/demo_functions.py --input data/sample_small.log
+```
+
+Déroule chaque fonction-clé (ingestion, filtres, transforms, router, analytics,
+rule engine, introspection) avec son entrée et sa sortie réelles sur le dataset.
+Utile pour la soutenance : prouve que chaque fonction produit des données, au-delà
+des 40 tests pytest qui ne font que vérifier qu'elles renvoient le bon type.
+
 ## Figures du rapport
 
 ```powershell
