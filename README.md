@@ -72,6 +72,17 @@ rule engine, introspection) avec son entrée et sa sortie réelles sur le datase
 Utile pour la soutenance : prouve que chaque fonction produit des données, au-delà
 des 40 tests pytest qui ne font que vérifier qu'elles renvoient le bon type.
 
+## Rapport IP par IP (qui fait quoi)
+
+```powershell
+python scripts/ip_report.py --input data/sample_small.log --top 50 --threshold 5
+python scripts/ip_report.py --input data/sample_large.log --top 50
+```
+
+Tableau trié des IPs avec colonnes Total / Logins / OK / FAIL / ERROR et statut
+BRUTEFORCE / BLACKLIST / OK. Répond à la question « parmi les 50 IPs, lesquelles
+sont en bruteforce ? » que `main.py --rules bruteforce` ne détaille pas.
+
 ## Figures du rapport
 
 ```powershell
