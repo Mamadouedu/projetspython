@@ -31,15 +31,15 @@ def is_valid_request(log: LogEntry) -> bool:
     Cas invalides :
     - payload vide : {} ou ""
     - JSON cassé : le parser n'arrive pas à le lire et le garde en texte,
-      donc un texte qui commence par "{" est un JSON mal formé.
+      donc un texte qui commence par "{" ou "[" est un JSON mal formé.
     """
     payload = log["payload"]
 
     if not payload:  # {} , "" , None
         return False
 
-    if isinstance(payload, str) and payload.startswith("{"):
-        return False  # JSON cassé resté en texte
+    if isinstance(payload, str) and payload.startswith(("{", "[")):
+        return False  # JSON cassé (objet ou liste) resté en texte
 
     return True
 

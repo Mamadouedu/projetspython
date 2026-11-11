@@ -148,7 +148,7 @@ def afficher_rapport(stats: PipelineStats, alertes: list[dict[str, Any]]) -> Non
 
     print("\n=== Alertes de sécurité ===")
     for res in alertes:
-        statut = "⚠ ALERTE" if res["alerte"] else "OK"
+        statut = "!! ALERTE" if res["alerte"] else "OK"  # ASCII : console Windows
         print(f"  {res['rule']:<18} {statut:<9} {res['ips'][:10]}")
 
 

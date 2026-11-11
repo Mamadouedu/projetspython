@@ -31,6 +31,7 @@ INVALID_REQUESTS = [
     "2026-11-01T10:00:04Z | INFO | 10.0.0.7 | user=dave | {}",
     "2026-11-01T10:00:05Z | INFO | 10.0.0.7 | user=dave | ",
     "2026-11-01T10:00:06Z | INFO | 10.0.0.7 | user=dave | {bad json, not valid}",
+    "2026-11-01T10:00:07Z | INFO | 10.0.0.7 | user=dave | [1, 2",
 ]
 
 
@@ -49,13 +50,13 @@ def test_drop_invalid_uses_filter_none() -> None:
 
 def test_drop_invalid_requests() -> None:
     entries = list(drop_invalid(map(parse_line, LINES + INVALID_REQUESTS)))
-    assert len(entries) == 7
+    assert len(entries) == 8
     assert len(list(drop_invalid_requests(entries))) == 4
 
 
 def test_is_valid_request() -> None:
     entries = list(drop_invalid(map(parse_line, INVALID_REQUESTS)))
-    assert [is_valid_request(e) for e in entries] == [False, False, False]
+    assert [is_valid_request(e) for e in entries] == [False, False, False, False]
     assert all(is_valid_request(e) for e in _entries())
 
 
@@ -103,6 +104,7 @@ def test_normalize_cleans_dirty_entry() -> None:
         "src_ip": "10.0.0.1",
         "user_id": "bob",
         "payload": "hello",
+        "summary": "[WARNING ] bob @ 10.0.0.1",
     }
 
 
@@ -129,6 +131,7 @@ def _log(payload):
     [
         (("192.168.1.1", 8080, "HTTPS"), "connexion"),
         ({"level": "ERROR", "code": 500}, "dictionnaire"),
+        ({"level": "WARNING", "code": 404}, "dictionnaire"),
         ({"action": "login", "status": "ok"}, "dictionnaire"),
         ("raw event 42", "brut"),
         (None, "inconnu"),
