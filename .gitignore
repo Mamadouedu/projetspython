@@ -37,3 +37,6 @@ figures/
 # Brouillons .docx du rapport (le rendu final n'est pas versionné)
 *.docx
 ~$*.docx
+
+# Exception : le PDF du rendu final (livrable versionné)
+!Rapport_Final_Projet_Python_ING3_RENDU_GROUPE.pdf
